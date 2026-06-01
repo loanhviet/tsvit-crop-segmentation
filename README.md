@@ -7,7 +7,7 @@ This repository contains the group's reproduction and analysis of **TSViT for cr
 - Code repository: `https://github.com/loanhviet/tsvit-crop-segmentation`
 - Demo GitHub.io: `https://loanhviet.github.io/tsvit-crop-segmentation/`
 - Demo source: [docs/index.html](docs/index.html)
-- Clean Colab notebook: [TSViT.ipynb](TSViT.ipynb)
+- Colab notebook: [TSViT.ipynb](TSViT.ipynb)
 
 ## Main Questions
 
@@ -77,22 +77,6 @@ python train_and_eval/segmentation_training_transf.py --config configs/PASTIS24/
 
 For Colab runs, use [TSViT.ipynb](TSViT.ipynb). The notebook is cleaned for submission: execution outputs are removed, long-running train/eval cells are guarded by flags, and dataset/checkpoint artifacts are kept outside GitHub.
 
-## Demo
-
-The GitHub Pages demo is a static report:
-
-```text
-docs/
-  index.html
-  assets/
-```
-
-Publish with GitHub Pages:
-
-1. Push this repository to `https://github.com/loanhviet/tsvit-crop-segmentation`.
-2. Open `Settings -> Pages`.
-3. Select `Deploy from a branch`.
-4. Choose branch `main` and folder `/docs`.
 
 ## Citation
 
