@@ -468,45 +468,49 @@
       </section>
       <section id="models">
         <div class="section-title">
-          <h2>Mô hình đã chạy</h2>
+          <h2>M&ocirc; h&igrave;nh &dstrok;&atilde; ch&#7841;y</h2>
           <p>
-            Nhóm giữ TSViT full làm mô hình chính, UNet3D làm baseline CNN, còn TViT/STViT để kiểm chứng đóng góp của spatial modeling và thứ tự temporal-spatial.
-            Các hình TSViT bên dưới là ảnh kiến trúc nhóm dùng để trình bày, không phải sơ đồ placeholder.
+            Nh&oacute;m gi&#7919; TSViT full l&agrave;m m&ocirc; h&igrave;nh ch&iacute;nh, UNet3D l&agrave;m baseline CNN, c&ograve;n TViT/STViT &dstrok;&#7875; ki&#7875;m ch&#7913;ng &dstrok;&oacute;ng g&oacute;p c&#7911;a spatial modeling v&agrave; th&#7913; t&#7921; temporal-spatial.
+            C&aacute;c h&igrave;nh TSViT b&ecirc;n d&#432;&#7899;i l&agrave; &#7843;nh ki&#7871;n tr&uacute;c nh&oacute;m d&ugrave;ng &dstrok;&#7875; tr&igrave;nh b&agrave;y, kh&ocirc;ng ph&#7843;i s&#417; &dstrok;&#7891; placeholder.
           </p>
         </div>
         <div class="grid two">
           <figure class="card figure">
             <img src="assets/architecture-tsvit-full.jpg" alt="TSViT full architecture">
-            <figcaption class="figure-caption">TSViT full: chuỗi ảnh vệ tinh được token hóa, đi qua temporal encoder, spatial encoder, rồi segmentation head.</figcaption>
+            <figcaption class="figure-caption">T&#7893;ng quan TSViT: chu&#7895;i &#7843;nh v&#7879; tinh &dstrok;i qua Token Embedding, Temporal Encoder, Spatial Encoder v&agrave; Segmentation Head.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/architecture-token-embedding.png" alt="TSViT token embedding">
+            <figcaption class="figure-caption">Token Embedding: chia &#7843;nh theo t&#7915;ng th&#7901;i &dstrok;i&#7875;m th&agrave;nh patch, flatten v&agrave; chi&#7871;u tuy&#7871;n t&iacute;nh th&agrave;nh token tr&#432;&#7899;c khi &dstrok;&#432;a v&agrave;o Temporal Encoder.</figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-temporal-encoder.jpg" alt="TSViT temporal encoder">
-            <figcaption class="figure-caption">Temporal encoder: học biến động theo thời gian cho từng patch, dùng DOY/temporal position để phân biệt giai đoạn mùa vụ.</figcaption>
+            <figcaption class="figure-caption">Temporal Encoder: h&#7885;c bi&#7871;n &dstrok;&#7897;ng theo th&#7901;i gian cho t&#7915;ng v&#7883; tr&iacute; patch, k&#7871;t h&#7907;p DOY/temporal positional embedding.</figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-spatial-encoder.jpg" alt="TSViT spatial encoder">
-            <figcaption class="figure-caption">Spatial encoder: sau khi temporal features đã được rút gọn theo lớp, mô hình học quan hệ không gian giữa các patch.</figcaption>
+            <figcaption class="figure-caption">Spatial Encoder: h&#7885;c quan h&#7879; kh&ocirc;ng gian gi&#7919;a c&aacute;c patch sau khi &dstrok;&#7863;c tr&#432;ng th&#7901;i gian &dstrok;&atilde; &dstrok;&#432;&#7907;c tr&iacute;ch xu&#7845;t.</figcaption>
           </figure>
           <figure class="card figure">
-            <img src="assets/architecture-segmentation-head.jpg" alt="TSViT segmentation head">
-            <figcaption class="figure-caption">Segmentation head: ánh xạ token về pixel-level logits, reassemble thành segmentation map cuối cùng.</figcaption>
+            <img src="assets/architecture-segmentation-head.png" alt="TSViT segmentation head">
+            <figcaption class="figure-caption">Segmentation Head: &aacute;nh x&#7841; token v&#7873; pixel-level logits, reshape v&agrave; reassemble th&agrave;nh segmentation map cu&#7889;i c&ugrave;ng.</figcaption>
           </figure>
         </div>
         <div class="note" style="margin: 18px 0 12px;">
-          Với UNet3D, TViT và STViT, demo giữ sơ đồ tóm tắt để nhấn mạnh vai trò trong thí nghiệm: baseline CNN, temporal-only ablation và spatial-first ablation.
+          V&#7899;i UNet3D, TViT v&agrave; STViT, demo gi&#7919; s&#417; &dstrok;&#7891; t&oacute;m t&#7855;t &dstrok;&#7875; nh&#7845;n m&#7841;nh vai tr&ograve; trong th&iacute; nghi&#7879;m: baseline CNN, temporal-only ablation v&agrave; spatial-first ablation.
         </div>
         <div class="grid three">
           <figure class="card figure">
             <img src="assets/architecture-unet3d.svg" alt="UNet3D architecture">
-            <figcaption class="figure-caption">UNet3D: baseline convolution 3D, dùng để so sánh với TSViT ở CQ1.</figcaption>
+            <figcaption class="figure-caption">UNet3D: baseline convolution 3D, d&ugrave;ng &dstrok;&#7875; so s&aacute;nh v&#7899;i TSViT &#7903; CQ1.</figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-tvit.svg" alt="TViT temporal-only architecture">
-            <figcaption class="figure-caption">TViT: bỏ spatial encoder, dùng để đo mức giảm khi không học quan hệ không gian.</figcaption>
+            <figcaption class="figure-caption">TViT: b&#7887; spatial encoder, d&ugrave;ng &dstrok;&#7875; &dstrok;o m&#7913;c gi&#7843;m khi kh&ocirc;ng h&#7885;c quan h&#7879; kh&ocirc;ng gian.</figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-stvit.svg" alt="STViT spatial-first architecture">
-            <figcaption class="figure-caption">STViT: đảo thứ tự thành spatial-first, dùng để kiểm tra thiết kế temporal-first của TSViT.</figcaption>
+            <figcaption class="figure-caption">STViT: &dstrok;&#7843;o th&#7913; t&#7921; th&agrave;nh spatial-first, d&ugrave;ng &dstrok;&#7875; ki&#7875;m tra thi&#7871;t k&#7871; temporal-first c&#7911;a TSViT.</figcaption>
           </figure>
         </div>
       </section>
