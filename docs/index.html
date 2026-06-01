@@ -1,424 +1,359 @@
-<!doctype html>
-<html lang="vi">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TSViT Crop-Type Semantic Segmentation</title>
-  <meta name="description" content="Demo report for TSViT crop-type semantic segmentation on PASTIS24.">
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;700;900&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&display=swap");
-
-    :root {
-      --ink: #17201a;
-      --muted: #5d6a61;
-      --paper: #f7faf8;
-      --line: #cbd6ce;
-      --green: #2e7d55;
-      --blue: #2f6f9f;
-      --coral: #c95f43;
-      --yellow: #d49b22;
-      --violet: #6b5c99;
-      --soft-green: #dcebd6;
-      --soft-blue: #d9eef7;
-      --soft-coral: #fee2d5;
-      --soft-yellow: #fff4cf;
-      --soft-violet: #e9e1f3;
-      --shadow: 0 16px 44px rgba(23, 32, 26, 0.10);
-      --sans: "Chivo", sans-serif;
-      --serif: "Source Serif 4", serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: var(--sans);
-      line-height: 1.55;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      min-height: 100vh;
-      background:
-        linear-gradient(90deg, rgba(23,32,26,0.045) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(23,32,26,0.035) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 14px clamp(18px, 4vw, 56px);
-      border-bottom: 1px solid var(--line);
-      background: rgba(247, 250, 248, 0.92);
-      backdrop-filter: blur(14px);
-    }
-
-    .brand {
-      font-weight: 900;
-      letter-spacing: 0;
-      white-space: nowrap;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .nav a {
-      padding: 7px 10px;
-      border: 1px solid transparent;
-    }
-
-    .nav a:hover {
-      border-color: var(--line);
-      background: #ffffff;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-      gap: clamp(28px, 5vw, 72px);
-      align-items: center;
-      padding: clamp(44px, 7vw, 88px) clamp(18px, 4vw, 56px) 54px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .eyebrow {
-      width: fit-content;
-      padding: 6px 10px;
-      border: 1px solid var(--line);
-      background: #ffffff;
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    h1, h2, h3, p {
-      margin: 0;
-    }
-
-    h1 {
-      margin-top: 18px;
-      max-width: 780px;
-      font-family: var(--serif);
-      font-size: clamp(40px, 7vw, 82px);
-      line-height: 0.96;
-      letter-spacing: 0;
-    }
-
-    .lead {
-      margin-top: 22px;
-      max-width: 720px;
-      color: var(--muted);
-      font-size: clamp(16px, 2vw, 20px);
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 16px;
-      border: 1px solid var(--ink);
-      background: var(--ink);
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    .btn.secondary {
-      background: #ffffff;
-      color: var(--ink);
-    }
-
-    .hero-panel {
-      border: 1px solid var(--line);
-      background: #ffffff;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .panel-head strong {
-      font-size: 15px;
-    }
-
-    .panel-head span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .map-preview {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 2px;
-      padding: 18px;
-      background: #edf3ef;
-      aspect-ratio: 1.25;
-    }
-
-    .tile {
-      min-height: 34px;
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-
-    .tile.a { background: #6fbf73; }
-    .tile.b { background: #f3c44f; }
-    .tile.c { background: #4f86c6; }
-    .tile.d { background: #ef6f6c; }
-    .tile.e { background: #9b7ede; }
-    .tile.f { background: #59c3c3; }
-
-    .metric-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid var(--line);
-    }
-
-    .metric {
-      padding: 16px;
-      border-right: 1px solid var(--line);
-    }
-
-    .metric:last-child {
-      border-right: 0;
-    }
-
-    .metric b {
-      display: block;
-      font-size: 26px;
-      line-height: 1;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    section {
-      padding: 64px clamp(18px, 4vw, 56px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-title {
-      display: grid;
-      grid-template-columns: minmax(0, 0.75fr) minmax(280px, 1fr);
-      gap: 32px;
-      align-items: start;
-      margin-bottom: 28px;
-    }
-
-    h2 {
-      font-family: var(--serif);
-      font-size: clamp(32px, 4vw, 54px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .section-title p,
-    .note {
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
-
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TSViT Crop-Type Semantic Segmentation</title>
+  <meta name="description" content="Demo report for TSViT crop-type semantic segmentation on PASTIS24.">
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;700;900&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&display=swap");
+    :root {
+      --ink: #17201a;
+      --muted: #5d6a61;
+      --paper: #f7faf8;
+      --line: #cbd6ce;
+      --green: #2e7d55;
+      --blue: #2f6f9f;
+      --coral: #c95f43;
+      --yellow: #d49b22;
+      --violet: #6b5c99;
+      --soft-green: #dcebd6;
+      --soft-blue: #d9eef7;
+      --soft-coral: #fee2d5;
+      --soft-yellow: #fff4cf;
+      --soft-violet: #e9e1f3;
+      --shadow: 0 16px 44px rgba(23, 32, 26, 0.10);
+      --sans: "Chivo", sans-serif;
+      --serif: "Source Serif 4", serif;
+    }
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.55;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .page {
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, rgba(23,32,26,0.045) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(23,32,26,0.035) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px clamp(18px, 4vw, 56px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 250, 248, 0.92);
+      backdrop-filter: blur(14px);
+    }
+    .brand {
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .nav a {
+      padding: 7px 10px;
+      border: 1px solid transparent;
+    }
+    .nav a:hover {
+      border-color: var(--line);
+      background: #ffffff;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: clamp(28px, 5vw, 72px);
+      align-items: center;
+      padding: clamp(44px, 7vw, 88px) clamp(18px, 4vw, 56px) 54px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      width: fit-content;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p {
+      margin: 0;
+    }
+    h1 {
+      margin-top: 18px;
+      max-width: 780px;
+      font-family: var(--serif);
+      font-size: clamp(40px, 7vw, 82px);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+    .lead {
+      margin-top: 22px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 20px);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .btn.secondary {
+      background: #ffffff;
+      color: var(--ink);
+    }
+    .hero-panel {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-head strong {
+      font-size: 15px;
+    }
+    .panel-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .map-preview {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      padding: 18px;
+      background: #edf3ef;
+      aspect-ratio: 1.25;
+    }
+    .tile {
+      min-height: 34px;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .tile.a { background: #6fbf73; }
+    .tile.b { background: #f3c44f; }
+    .tile.c { background: #4f86c6; }
+    .tile.d { background: #ef6f6c; }
+    .tile.e { background: #9b7ede; }
+    .tile.f { background: #59c3c3; }
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+    }
+    .metric {
+      padding: 16px;
+      border-right: 1px solid var(--line);
+    }
+    .metric:last-child {
+      border-right: 0;
+    }
+    .metric b {
+      display: block;
+      font-size: 26px;
+      line-height: 1;
+    }
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    section {
+      padding: 64px clamp(18px, 4vw, 56px);
+      border-bottom: 1px solid var(--line);
+    }
+    .section-title {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(280px, 1fr);
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 28px;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .section-title p,
+    .note {
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
     .grid.two {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
     .grid.three {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-
     .grid.four {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #ffffff;
-      overflow: hidden;
-    }
-
-    .card.pad {
-      padding: 20px;
-    }
-
-    .card h3 {
-      font-size: 19px;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .tag {
-      display: inline-block;
-      margin-bottom: 12px;
-      padding: 4px 8px;
-      border: 1px solid var(--line);
-      color: var(--green);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .dataset-shape {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .shape {
-      padding: 18px;
-      border: 1px solid var(--line);
-      background: #ffffff;
-    }
-
-    .shape b {
-      display: block;
-      font-family: var(--serif);
-      font-size: 26px;
-    }
-
-    .shape span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .figure img {
-      display: block;
-      width: 100%;
-      height: auto;
-      background: #ffffff;
-    }
-
-    .figure-caption {
-      padding: 14px 16px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      background: #ffffff;
-    }
-
-    table {
-      width: 100%;
-      min-width: 780px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 13px 14px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      white-space: nowrap;
-    }
-
-    th {
-      background: #edf3ef;
-      font-size: 12px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    td {
-      font-size: 14px;
-    }
-
-    tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .best {
-      color: var(--green);
-      font-weight: 900;
-    }
-
-    .warn {
-      color: var(--coral);
-      font-weight: 900;
-    }
-
-    .insights {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .insight {
-      padding: 18px;
-      border-left: 5px solid var(--green);
-      background: #ffffff;
-    }
-
-    .insight:nth-child(2) { border-left-color: var(--coral); }
-    .insight:nth-child(3) { border-left-color: var(--blue); }
-
-    .insight b {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .insight span {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .footer {
-      padding: 34px clamp(18px, 4vw, 56px);
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 980px) {
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .card.pad {
+      padding: 20px;
+    }
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 10px;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .dataset-shape {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .shape {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+    .shape b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 26px;
+    }
+    .shape span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #ffffff;
+    }
+    .figure-caption {
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+    table {
+      width: 100%;
+      min-width: 780px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      white-space: nowrap;
+    }
+    th {
+      background: #edf3ef;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    td {
+      font-size: 14px;
+    }
+    tr:last-child td {
+      border-bottom: 0;
+    }
+    .best {
+      color: var(--green);
+      font-weight: 900;
+    }
+    .warn {
+      color: var(--coral);
+      font-weight: 900;
+    }
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .insight {
+      padding: 18px;
+      border-left: 5px solid var(--green);
+      background: #ffffff;
+    }
+    .insight:nth-child(2) { border-left-color: var(--coral); }
+    .insight:nth-child(3) { border-left-color: var(--blue); }
+    .insight b {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .insight span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .footer {
+      padding: 34px clamp(18px, 4vw, 56px);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 980px) {
       .hero,
       .section-title,
       .grid.two,
@@ -426,273 +361,253 @@
       .grid.four,
       .insights {
         grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .dataset-shape,
-      .metric-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .metric {
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .metric:last-child {
-        border-bottom: 0;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <header class="topbar">
-      <a class="brand" href="#top">TSViT Crop Segmentation</a>
-      <nav class="nav" aria-label="Main navigation">
-        <a href="#problem">BÃ i toÃ¡n</a>
-        <a href="#dataset">Dataset</a>
-        <a href="#models">MÃ´ hÃ¬nh</a>
-        <a href="#results">Káº¿t quáº£</a>
-        <a href="#qualitative">Demo Ä‘á»‹nh tÃ­nh</a>
-      </nav>
-    </header>
-
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div>
-          <div class="eyebrow">Satellite Image Time Series</div>
-          <h1 id="hero-title">Crop-type semantic segmentation vá»›i TSViT</h1>
-          <p class="lead">
-            Demo bÃ¡o cÃ¡o cho bÃ i toÃ¡n phÃ¢n Ä‘oáº¡n nhÃ£n cÃ¢y trá»“ng theo tá»«ng pixel tá»« chuá»—i áº£nh Sentinel-2.
-            NhÃ³m táº­p trung vÃ o PASTIS24, so sÃ¡nh TSViT vá»›i UNet3D vÃ  hai biáº¿n thá»ƒ ablation TViT/STViT.
-          </p>
-          <div class="actions">
-            <a class="btn" href="https://github.com/loanhviet/tsvit-crop-segmentation">Code GitHub</a>
-            <a class="btn secondary" href="https://loanhviet.github.io/tsvit-crop-segmentation/">Demo GitHub.io</a>
-          </div>
-        </div>
-
-        <aside class="hero-panel" aria-label="Summary result preview">
-          <div class="panel-head">
-            <strong>Predicted segmentation map</strong>
-            <span>19 crop classes</span>
-          </div>
-          <div class="map-preview" aria-hidden="true">
-            <span class="tile a"></span><span class="tile a"></span><span class="tile b"></span><span class="tile b"></span><span class="tile c"></span><span class="tile c"></span>
-            <span class="tile a"></span><span class="tile d"></span><span class="tile d"></span><span class="tile b"></span><span class="tile c"></span><span class="tile c"></span>
-            <span class="tile e"></span><span class="tile d"></span><span class="tile d"></span><span class="tile b"></span><span class="tile f"></span><span class="tile f"></span>
-            <span class="tile e"></span><span class="tile e"></span><span class="tile d"></span><span class="tile f"></span><span class="tile f"></span><span class="tile a"></span>
-            <span class="tile c"></span><span class="tile e"></span><span class="tile e"></span><span class="tile f"></span><span class="tile a"></span><span class="tile a"></span>
-            <span class="tile c"></span><span class="tile c"></span><span class="tile e"></span><span class="tile b"></span><span class="tile b"></span><span class="tile a"></span>
-          </div>
-          <div class="metric-strip">
-            <div class="metric"><b>0.6361</b><span>TSViT mIoU</span></div>
-            <div class="metric"><b>+6.41</b><span>mIoU pp vs UNet3D</span></div>
-            <div class="metric"><b>-26.48</b><span>TViT delta pp</span></div>
-          </div>
-        </aside>
-      </section>
-
-      <section id="problem">
-        <div class="section-title">
-          <h2>Bá»‘i cáº£nh bÃ i toÃ¡n</h2>
-          <p>
-            Input lÃ  chuá»—i áº£nh vá»‡ tinh cÃ¹ng má»™t khu vá»±c qua nhiá»u thá»i Ä‘iá»ƒm. Output lÃ  báº£n Ä‘á»“ nhÃ£n cÃ¢y trá»“ng theo tá»«ng pixel.
-            ÄÃ¢y lÃ  bÃ i toÃ¡n khÃ³ vÃ¬ cÃ¢y trá»“ng khÃ¡c nhau cÃ³ thá»ƒ giá»‘ng nhau á»Ÿ má»™t thá»i Ä‘iá»ƒm, nhÆ°ng khÃ¡c nhau theo diá»…n biáº¿n mÃ¹a vá»¥.
-          </p>
-        </div>
-        <div class="grid two">
-          <article class="card pad">
-            <span class="tag">Input</span>
-            <h3>Satellite image time series</h3>
-            <p>Má»—i sample chá»©a nhiá»u áº£nh Sentinel-2 theo thá»i gian, 10 spectral bands vÃ  vector ngÃ y trong nÄƒm.</p>
-          </article>
-          <article class="card pad">
-            <span class="tag">Output</span>
-            <h3>Pixel-level crop map</h3>
-            <p>MÃ´ hÃ¬nh dá»± Ä‘oÃ¡n má»™t class crop-type cho tá»«ng pixel; class void Ä‘Æ°á»£c mask khá»i loss vÃ  metric.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="dataset">
-        <div class="section-title">
-          <h2>Dataset PASTIS24</h2>
-          <p>
-            NhÃ³m dÃ¹ng PASTIS24, phiÃªn báº£n chia nhá» tá»« PASTIS thÃ nh cÃ¡c patch 24x24 Ä‘á»ƒ huáº¥n luyá»‡n trÃªn GPU Colab.
-            CÃ¡c mÃ´ hÃ¬nh dÃ¹ng cÃ¹ng fold protocol Ä‘á»ƒ so sÃ¡nh cÃ´ng báº±ng.
-          </p>
-        </div>
-        <div class="dataset-shape">
-          <div class="shape"><b>img</b><span>(T, 10, 24, 24) Sentinel-2 time series</span></div>
-          <div class="shape"><b>labels</b><span>(3, 24, 24), training pipeline dÃ¹ng labels[0]</span></div>
-          <div class="shape"><b>doy</b><span>(T,) day-of-year, Ä‘Æ°á»£c Ä‘Æ°a vÃ o temporal encoding</span></div>
-        </div>
-      </section>
-
-      <section id="models">
-        <div class="section-title">
-          <h2>M? h?nh ?? ch?y</h2>
-          <p>
-            Nh?m gi? TSViT full l?m m? h?nh ch?nh, UNet3D l?m baseline CNN, c?n TViT/STViT ?? ki?m ch?ng ??ng g?p c?a spatial modeling v? th? t? temporal-spatial.
-            C?c h?nh TSViT b?n d??i l? ?nh ki?n tr?c nh?m d?ng ?? tr?nh b?y, kh?ng ph?i s? ?? placeholder.
-          </p>
-        </div>
-
-        <div class="grid two">
-          <figure class="card figure">
-            <img src="assets/architecture-tsvit-full.jpg" alt="TSViT full architecture">
-            <figcaption class="figure-caption">TSViT full: chu?i ?nh v? tinh ???c token h?a, ?i qua temporal encoder, spatial encoder, r?i segmentation head.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/architecture-temporal-encoder.jpg" alt="TSViT temporal encoder">
-            <figcaption class="figure-caption">Temporal encoder: h?c bi?n ??ng theo th?i gian cho t?ng patch, d?ng DOY/temporal position ?? ph?n bi?t giai ?o?n m?a v?.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/architecture-spatial-encoder.jpg" alt="TSViT spatial encoder">
-            <figcaption class="figure-caption">Spatial encoder: sau khi temporal features ?? ???c r?t g?n theo l?p, m? h?nh h?c quan h? kh?ng gian gi?a c?c patch.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/architecture-segmentation-head.jpg" alt="TSViT segmentation head">
-            <figcaption class="figure-caption">Segmentation head: ?nh x? token v? pixel-level logits, reassemble th?nh segmentation map cu?i c?ng.</figcaption>
-          </figure>
-        </div>
-
-        <div class="note" style="margin: 18px 0 12px;">
-          V?i UNet3D, TViT v? STViT, demo gi? s? ?? t?m t?t ?? nh?n m?nh vai tr? trong th? nghi?m: baseline CNN, temporal-only ablation v? spatial-first ablation.
-        </div>
-        <div class="grid three">
-          <figure class="card figure">
-            <img src="assets/architecture-unet3d.svg" alt="UNet3D architecture">
-            <figcaption class="figure-caption">UNet3D: baseline convolution 3D, d?ng ?? so s?nh v?i TSViT ? CQ1.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/architecture-tvit.svg" alt="TViT temporal-only architecture">
-            <figcaption class="figure-caption">TViT: b? spatial encoder, d?ng ?? ?o m?c gi?m khi kh?ng h?c quan h? kh?ng gian.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/architecture-stvit.svg" alt="STViT spatial-first architecture">
-            <figcaption class="figure-caption">STViT: ??o th? t? th?nh spatial-first, d?ng ?? ki?m tra thi?t k? temporal-first c?a TSViT.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section id="results">
-        <div class="section-title">
-          <h2>Káº¿t quáº£ Ä‘á»‹nh lÆ°á»£ng</h2>
-          <p>
-            Metric chÃ­nh lÃ  mIoU vÃ  F1-macro vÃ¬ dataset máº¥t cÃ¢n báº±ng lá»›p; OA Ä‘Æ°á»£c bÃ¡o cÃ¡o nhÆ°ng khÃ´ng dÃ¹ng lÃ m káº¿t luáº­n duy nháº¥t.
-          </p>
-        </div>
-
-        <h3>CQ1: TSViT vs UNet3D</h3>
-        <div class="table-wrap" style="margin-top: 12px; margin-bottom: 34px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Model</th><th>Loss</th><th>OA</th><th>mIoU</th><th>F1-macro</th><th>Precision</th><th>Recall</th><th>Params</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>TSViT</strong></td><td>0.6022</td><td class="best">0.8271</td><td class="best">0.6361</td><td class="best">0.7623</td><td class="best">0.7841</td><td class="best">0.7465</td><td>1.657M</td>
-              </tr>
-              <tr>
-                <td>UNet3D</td><td>0.6281</td><td>0.8011</td><td>0.5720</td><td>0.7045</td><td>0.7573</td><td>0.6711</td><td>6.177M</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>CQ2: Ablation TSViT</h3>
-        <div class="table-wrap" style="margin-top: 12px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Model</th><th>Loss</th><th>OA</th><th>mIoU</th><th>F1-macro</th><th>Precision</th><th>Recall</th><th>Delta mIoU</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>TSViT full</strong></td><td>0.6022</td><td class="best">0.8271</td><td class="best">0.6361</td><td class="best">0.7623</td><td class="best">0.7841</td><td class="best">0.7465</td><td>0.0000</td>
-              </tr>
-              <tr>
-                <td>TViT, no spatial</td><td>1.0591</td><td>0.6685</td><td>0.3713</td><td>0.5267</td><td>0.5654</td><td>0.5049</td><td class="warn">-0.2648</td>
-              </tr>
-              <tr>
-                <td>STViT, spatial-first</td><td>0.7707</td><td>0.7939</td><td>0.5572</td><td>0.6921</td><td>0.7424</td><td>0.6660</td><td class="warn">-0.0789</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="insights">
-          <div class="insight"><b>TSViT tháº¯ng á»Ÿ mIoU/F1</b><span>Attention temporal-spatial giÃºp cÃ¢n báº±ng tá»‘t hÆ¡n giá»¯a cÃ¡c lá»›p.</span></div>
-          <div class="insight"><b>TViT giáº£m máº¡nh nháº¥t</b><span>Bá» spatial encoder lÃ m máº¥t quan há»‡ giá»¯a cÃ¡c patch, giáº£m 26.48 Ä‘iá»ƒm mIoU.</span></div>
-          <div class="insight"><b>STViT váº«n kÃ©m TSViT</b><span>Spatial-first tá»‘t hÆ¡n temporal-only nhÆ°ng temporal-first phÃ¹ há»£p hÆ¡n trong thá»±c nghiá»‡m nÃ y.</span></div>
-        </div>
-      </section>
-
-      <section id="qualitative">
-        <div class="section-title">
-          <h2>Demo Ä‘á»‹nh tÃ­nh</h2>
-          <p>
-            Pháº§n nÃ y minh há»a cÃ¡ch Ä‘á»c prediction map: so sÃ¡nh ground truth vá»›i output cá»§a cÃ¡c mÃ´ hÃ¬nh, cÃ¡c pixel sai Ä‘Æ°á»£c Ä‘Ã¡nh dáº¥u Ä‘á»ƒ tháº¥y lá»—i á»Ÿ biÃªn vÃ  vÃ¹ng nhá».
-          </p>
-        </div>
-        <div class="grid two">
-          <figure class="card figure">
-            <img src="assets/qualitative-cq1-sample-06199.png" alt="CQ1 qualitative comparison sample 6199">
-            <figcaption class="figure-caption">Sample test #6199: TSViT giáº£m sá»‘ pixel sai so vá»›i UNet3D vÃ  giá»¯ cáº¥u trÃºc vÃ¹ng tá»‘t hÆ¡n.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/qualitative-cq1-sample-12399.png" alt="CQ1 qualitative comparison sample 12399">
-            <figcaption class="figure-caption">Sample test #12399: TSViT bÃ¡m gáº§n ground truth, minh há»a rÃµ cÃ¡ch Ä‘á»c Pred/Error map.</figcaption>
-          </figure>
-        </div>
-        <div class="grid two" style="margin-top: 18px;">
-          <figure class="card figure">
-            <img src="assets/qualitative-tsvit-sample-12399.png" alt="TSViT prediction and error map sample 12399">
-            <figcaption class="figure-caption">áº¢nh TSViT Ä‘Æ¡n mÃ´ hÃ¬nh: Ground Truth, Prediction vÃ  error pixels trÃªn test split PASTIS24.</figcaption>
-          </figure>
-          <figure class="card figure">
-            <img src="assets/qualitative-cq2.svg" alt="Qualitative comparison layout for TSViT ablations">
-            <figcaption class="figure-caption">SÆ¡ Ä‘á»“ Ä‘á»c pháº§n ablation: TViT bá» spatial encoder; STViT Ä‘áº£o thá»© tá»± encoder; TSViT giá»¯ temporal-first + spatial.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section id="conclusion">
-        <div class="section-title">
-          <h2>Káº¿t luáº­n</h2>
-          <p>
-            TSViT lÃ  lá»±a chá»n phÃ¹ há»£p cho crop-type semantic segmentation trÃªn SITS: mÃ´ hÃ¬nh Ä‘áº¡t káº¿t quáº£ tá»‘t hÆ¡n UNet3D theo mIoU/F1, cÃ²n ablation cho tháº¥y spatial modeling vÃ  thá»© tá»± temporal-first lÃ  hai yáº¿u tá»‘ quan trá»ng.
-          </p>
-        </div>
-        <div class="grid four">
-          <article class="card pad"><span class="tag">CQ1</span><h3>TSViT tá»‘t hÆ¡n baseline</h3><p>mIoU tÄƒng 6.41 Ä‘iá»ƒm pháº§n trÄƒm so vá»›i UNet3D.</p></article>
-          <article class="card pad"><span class="tag">CQ2</span><h3>Spatial modeling quan trá»ng</h3><p>TViT giáº£m máº¡nh nháº¥t khi bá» spatial encoder.</p></article>
-          <article class="card pad"><span class="tag">Design</span><h3>Temporal-first há»£p lÃ½</h3><p>STViT tá»‘t hÆ¡n TViT nhÆ°ng váº«n tháº¥p hÆ¡n TSViT full.</p></article>
-          <article class="card pad"><span class="tag">Demo</span><h3>Prediction map dá»… Ä‘á»c</h3><p>áº¢nh GT/Pred/Error giÃºp giáº£i thÃ­ch lá»—i theo biÃªn vÃ  vÃ¹ng nhá».</p></article>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      Based on DeepSatModels and the CVPR 2023 TSViT paper. This page is a static GitHub Pages report for the group's reproduction experiments.
-    </footer>
-  </div>
-</body>
-</html>
-
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 620px) {
+      .dataset-shape,
+      .metric-strip {
+        grid-template-columns: 1fr;
+      }
+      .metric {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .metric:last-child {
+        border-bottom: 0;
+      }
+      .nav {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="#top">TSViT Crop Segmentation</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#problem">Bài toán</a>
+        <a href="#dataset">Dataset</a>
+        <a href="#models">Mô hình</a>
+        <a href="#results">Kết quả</a>
+        <a href="#qualitative">Demo định tính</a>
+      </nav>
+    </header>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <div class="eyebrow">Satellite Image Time Series</div>
+          <h1 id="hero-title">Crop-type semantic segmentation với TSViT</h1>
+          <p class="lead">
+            Demo báo cáo cho bài toán phân đoạn nhãn cây trồng theo từng pixel từ chuỗi ảnh Sentinel-2.
+            Nhóm tập trung vào PASTIS24, so sánh TSViT với UNet3D và hai biến thể ablation TViT/STViT.
+          </p>
+          <div class="actions">
+            <a class="btn" href="https://github.com/loanhviet/tsvit-crop-segmentation">Code GitHub</a>
+            <a class="btn secondary" href="https://loanhviet.github.io/tsvit-crop-segmentation/">Demo GitHub.io</a>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Summary result preview">
+          <div class="panel-head">
+            <strong>Predicted segmentation map</strong>
+            <span>19 crop classes</span>
+          </div>
+          <div class="map-preview" aria-hidden="true">
+            <span class="tile a"></span><span class="tile a"></span><span class="tile b"></span><span class="tile b"></span><span class="tile c"></span><span class="tile c"></span>
+            <span class="tile a"></span><span class="tile d"></span><span class="tile d"></span><span class="tile b"></span><span class="tile c"></span><span class="tile c"></span>
+            <span class="tile e"></span><span class="tile d"></span><span class="tile d"></span><span class="tile b"></span><span class="tile f"></span><span class="tile f"></span>
+            <span class="tile e"></span><span class="tile e"></span><span class="tile d"></span><span class="tile f"></span><span class="tile f"></span><span class="tile a"></span>
+            <span class="tile c"></span><span class="tile e"></span><span class="tile e"></span><span class="tile f"></span><span class="tile a"></span><span class="tile a"></span>
+            <span class="tile c"></span><span class="tile c"></span><span class="tile e"></span><span class="tile b"></span><span class="tile b"></span><span class="tile a"></span>
+          </div>
+          <div class="metric-strip">
+            <div class="metric"><b>0.6361</b><span>TSViT mIoU</span></div>
+            <div class="metric"><b>+6.41</b><span>mIoU pp vs UNet3D</span></div>
+            <div class="metric"><b>-26.48</b><span>TViT delta pp</span></div>
+          </div>
+        </aside>
+      </section>
+      <section id="problem">
+        <div class="section-title">
+          <h2>Bối cảnh bài toán</h2>
+          <p>
+            Input là chuỗi ảnh vệ tinh cùng một khu vực qua nhiều thời điểm. Output là bản đồ nhãn cây trồng theo từng pixel.
+            Đây là bài toán khó vì cây trồng khác nhau có thể giống nhau ở một thời điểm, nhưng khác nhau theo diễn biến mùa vụ.
+          </p>
+        </div>
+        <div class="grid two">
+          <article class="card pad">
+            <span class="tag">Input</span>
+            <h3>Satellite image time series</h3>
+            <p>Mỗi sample chứa nhiều ảnh Sentinel-2 theo thời gian, 10 spectral bands và vector ngày trong năm.</p>
+          </article>
+          <article class="card pad">
+            <span class="tag">Output</span>
+            <h3>Pixel-level crop map</h3>
+            <p>Mô hình dự đoán một class crop-type cho từng pixel; class void được mask khỏi loss và metric.</p>
+          </article>
+        </div>
+      </section>
+      <section id="dataset">
+        <div class="section-title">
+          <h2>Dataset PASTIS24</h2>
+          <p>
+            Nhóm dùng PASTIS24, phiên bản chia nhỏ từ PASTIS thành các patch 24x24 để huấn luyện trên GPU Colab.
+            Các mô hình dùng cùng fold protocol để so sánh công bằng.
+          </p>
+        </div>
+        <div class="dataset-shape">
+          <div class="shape"><b>img</b><span>(T, 10, 24, 24) Sentinel-2 time series</span></div>
+          <div class="shape"><b>labels</b><span>(3, 24, 24), training pipeline dùng labels[0]</span></div>
+          <div class="shape"><b>doy</b><span>(T,) day-of-year, được đưa vào temporal encoding</span></div>
+        </div>
+      </section>
+      <section id="models">
+        <div class="section-title">
+          <h2>Mô hình đã chạy</h2>
+          <p>
+            Nhóm giữ TSViT full làm mô hình chính, UNet3D làm baseline CNN, còn TViT/STViT để kiểm chứng đóng góp của spatial modeling và thứ tự temporal-spatial.
+            Các hình TSViT bên dưới là ảnh kiến trúc nhóm dùng để trình bày, không phải sơ đồ placeholder.
+          </p>
+        </div>
+        <div class="grid two">
+          <figure class="card figure">
+            <img src="assets/architecture-tsvit-full.jpg" alt="TSViT full architecture">
+            <figcaption class="figure-caption">TSViT full: chuỗi ảnh vệ tinh được token hóa, đi qua temporal encoder, spatial encoder, rồi segmentation head.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/architecture-temporal-encoder.jpg" alt="TSViT temporal encoder">
+            <figcaption class="figure-caption">Temporal encoder: học biến động theo thời gian cho từng patch, dùng DOY/temporal position để phân biệt giai đoạn mùa vụ.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/architecture-spatial-encoder.jpg" alt="TSViT spatial encoder">
+            <figcaption class="figure-caption">Spatial encoder: sau khi temporal features đã được rút gọn theo lớp, mô hình học quan hệ không gian giữa các patch.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/architecture-segmentation-head.jpg" alt="TSViT segmentation head">
+            <figcaption class="figure-caption">Segmentation head: ánh xạ token về pixel-level logits, reassemble thành segmentation map cuối cùng.</figcaption>
+          </figure>
+        </div>
+        <div class="note" style="margin: 18px 0 12px;">
+          Với UNet3D, TViT và STViT, demo giữ sơ đồ tóm tắt để nhấn mạnh vai trò trong thí nghiệm: baseline CNN, temporal-only ablation và spatial-first ablation.
+        </div>
+        <div class="grid three">
+          <figure class="card figure">
+            <img src="assets/architecture-unet3d.svg" alt="UNet3D architecture">
+            <figcaption class="figure-caption">UNet3D: baseline convolution 3D, dùng để so sánh với TSViT ở CQ1.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/architecture-tvit.svg" alt="TViT temporal-only architecture">
+            <figcaption class="figure-caption">TViT: bỏ spatial encoder, dùng để đo mức giảm khi không học quan hệ không gian.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/architecture-stvit.svg" alt="STViT spatial-first architecture">
+            <figcaption class="figure-caption">STViT: đảo thứ tự thành spatial-first, dùng để kiểm tra thiết kế temporal-first của TSViT.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section id="results">
+        <div class="section-title">
+          <h2>Kết quả định lượng</h2>
+          <p>
+            Metric chính là mIoU và F1-macro vì dataset mất cân bằng lớp; OA được báo cáo nhưng không dùng làm kết luận duy nhất.
+          </p>
+        </div>
+        <h3>CQ1: TSViT vs UNet3D</h3>
+        <div class="table-wrap" style="margin-top: 12px; margin-bottom: 34px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th><th>Loss</th><th>OA</th><th>mIoU</th><th>F1-macro</th><th>Precision</th><th>Recall</th><th>Params</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>TSViT</strong></td><td>0.6022</td><td class="best">0.8271</td><td class="best">0.6361</td><td class="best">0.7623</td><td class="best">0.7841</td><td class="best">0.7465</td><td>1.657M</td>
+              </tr>
+              <tr>
+                <td>UNet3D</td><td>0.6281</td><td>0.8011</td><td>0.5720</td><td>0.7045</td><td>0.7573</td><td>0.6711</td><td>6.177M</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>CQ2: Ablation TSViT</h3>
+        <div class="table-wrap" style="margin-top: 12px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th><th>Loss</th><th>OA</th><th>mIoU</th><th>F1-macro</th><th>Precision</th><th>Recall</th><th>Delta mIoU</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>TSViT full</strong></td><td>0.6022</td><td class="best">0.8271</td><td class="best">0.6361</td><td class="best">0.7623</td><td class="best">0.7841</td><td class="best">0.7465</td><td>0.0000</td>
+              </tr>
+              <tr>
+                <td>TViT, no spatial</td><td>1.0591</td><td>0.6685</td><td>0.3713</td><td>0.5267</td><td>0.5654</td><td>0.5049</td><td class="warn">-0.2648</td>
+              </tr>
+              <tr>
+                <td>STViT, spatial-first</td><td>0.7707</td><td>0.7939</td><td>0.5572</td><td>0.6921</td><td>0.7424</td><td>0.6660</td><td class="warn">-0.0789</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="insights">
+          <div class="insight"><b>TSViT thắng ở mIoU/F1</b><span>Attention temporal-spatial giúp cân bằng tốt hơn giữa các lớp.</span></div>
+          <div class="insight"><b>TViT giảm mạnh nhất</b><span>Bỏ spatial encoder làm mất quan hệ giữa các patch, giảm 26.48 điểm mIoU.</span></div>
+          <div class="insight"><b>STViT vẫn kém TSViT</b><span>Spatial-first tốt hơn temporal-only nhưng temporal-first phù hợp hơn trong thực nghiệm này.</span></div>
+        </div>
+      </section>
+      <section id="qualitative">
+        <div class="section-title">
+          <h2>Demo định tính</h2>
+          <p>
+            Phần này minh họa cách đọc prediction map: so sánh ground truth với output của các mô hình, các pixel sai được đánh dấu để thấy lỗi ở biên và vùng nhỏ.
+          </p>
+        </div>
+        <div class="grid two">
+          <figure class="card figure">
+            <img src="assets/qualitative-cq1-sample-06199.png" alt="CQ1 qualitative comparison sample 6199">
+            <figcaption class="figure-caption">Sample test #6199: TSViT giảm số pixel sai so với UNet3D và giữ cấu trúc vùng tốt hơn.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/qualitative-cq1-sample-12399.png" alt="CQ1 qualitative comparison sample 12399">
+            <figcaption class="figure-caption">Sample test #12399: TSViT bám gần ground truth, minh họa rõ cách đọc Pred/Error map.</figcaption>
+          </figure>
+        </div>
+        <div class="grid two" style="margin-top: 18px;">
+          <figure class="card figure">
+            <img src="assets/qualitative-tsvit-sample-12399.png" alt="TSViT prediction and error map sample 12399">
+            <figcaption class="figure-caption">Ảnh TSViT đơn mô hình: Ground Truth, Prediction và error pixels trên test split PASTIS24.</figcaption>
+          </figure>
+          <figure class="card figure">
+            <img src="assets/qualitative-cq2.svg" alt="Qualitative comparison layout for TSViT ablations">
+            <figcaption class="figure-caption">Sơ đồ đọc phần ablation: TViT bỏ spatial encoder; STViT đảo thứ tự encoder; TSViT giữ temporal-first + spatial.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section id="conclusion">
+        <div class="section-title">
+          <h2>Kết luận</h2>
+          <p>
+            TSViT là lựa chọn phù hợp cho crop-type semantic segmentation trên SITS: mô hình đạt kết quả tốt hơn UNet3D theo mIoU/F1, còn ablation cho thấy spatial modeling và thứ tự temporal-first là hai yếu tố quan trọng.
+          </p>
+        </div>
+        <div class="grid four">
+          <article class="card pad"><span class="tag">CQ1</span><h3>TSViT tốt hơn baseline</h3><p>mIoU tăng 6.41 điểm phần trăm so với UNet3D.</p></article>
+          <article class="card pad"><span class="tag">CQ2</span><h3>Spatial modeling quan trọng</h3><p>TViT giảm mạnh nhất khi bỏ spatial encoder.</p></article>
+          <article class="card pad"><span class="tag">Design</span><h3>Temporal-first hợp lý</h3><p>STViT tốt hơn TViT nhưng vẫn thấp hơn TSViT full.</p></article>
+          <article class="card pad"><span class="tag">Demo</span><h3>Prediction map dễ đọc</h3><p>Ảnh GT/Pred/Error giúp giải thích lỗi theo biên và vùng nhỏ.</p></article>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      Based on DeepSatModels and the CVPR 2023 TSViT paper. This page is a static GitHub Pages report for the group's reproduction experiments.
+    </footer>
+  </div>
+</body>
+</html>
