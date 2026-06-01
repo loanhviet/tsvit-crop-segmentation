@@ -291,6 +291,18 @@
       color: var(--muted);
       font-size: 13px;
     }
+
+    .figure-caption b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .figure-caption span {
+      display: block;
+      line-height: 1.55;
+    }
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--line);
@@ -477,23 +489,23 @@
         <div class="grid two">
           <figure class="card figure">
             <img src="assets/architecture-tsvit-full.jpg" alt="TSViT full architecture">
-            <figcaption class="figure-caption">T&#7893;ng quan TSViT: chu&#7895;i &#7843;nh v&#7879; tinh &dstrok;i qua Token Embedding, Temporal Encoder, Spatial Encoder v&agrave; Segmentation Head.</figcaption>
+            <figcaption class="figure-caption"><b>T&#7893;ng quan TSViT</b><span>TSViT x&#7917; l&yacute; chu&#7895;i &#7843;nh v&#7879; tinh theo hai giai &dstrok;o&#7841;n ch&iacute;nh: h&#7885;c bi&#7871;n &dstrok;&#7897;ng theo th&#7901;i gian tr&#432;&#7899;c, sau &dstrok;&oacute; h&#7885;c quan h&#7879; kh&ocirc;ng gian gi&#7919;a c&aacute;c patch. Thi&#7871;t k&#7871; n&agrave;y ph&ugrave; h&#7907;p v&#7899;i crop-type segmentation v&igrave; c&acirc;y tr&#7891;ng kh&aacute;c nhau th&#432;&#7901;ng th&#7875; hi&#7879;n kh&aacute;c bi&#7879;t theo m&ugrave;a v&#7909;.</span></figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-token-embedding.png" alt="TSViT token embedding">
-            <figcaption class="figure-caption">Token Embedding: chia &#7843;nh theo t&#7915;ng th&#7901;i &dstrok;i&#7875;m th&agrave;nh patch, flatten v&agrave; chi&#7871;u tuy&#7871;n t&iacute;nh th&agrave;nh token tr&#432;&#7899;c khi &dstrok;&#432;a v&agrave;o Temporal Encoder.</figcaption>
+            <figcaption class="figure-caption"><b>Token Embedding</b><span>M&#7895;i frame trong chu&#7895;i SITS &dstrok;&#432;&#7907;c chia th&agrave;nh c&aacute;c patch nh&#7887;. T&#7915;ng patch &dstrok;&#432;&#7907;c flatten v&agrave; chi&#7871;u tuy&#7871;n t&iacute;nh th&agrave;nh token k&iacute;ch th&#432;&#7899;c <code>d</code>; sau &dstrok;&oacute; token &dstrok;&#432;&#7907;c s&#7855;p x&#7871;p l&#7841;i th&agrave;nh chu&#7895;i theo th&#7901;i gian cho t&#7915;ng v&#7883; tr&iacute; patch.</span></figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-temporal-encoder.jpg" alt="TSViT temporal encoder">
-            <figcaption class="figure-caption">Temporal Encoder: h&#7885;c bi&#7871;n &dstrok;&#7897;ng theo th&#7901;i gian cho t&#7915;ng v&#7883; tr&iacute; patch, k&#7871;t h&#7907;p DOY/temporal positional embedding.</figcaption>
+            <figcaption class="figure-caption"><b>Temporal Encoder</b><span>Temporal Encoder x&#7917; l&yacute; m&#7897;t chu&#7895;i token theo th&#7901;i gian cho m&#7895;i spatial patch. DOY/time &dstrok;&#432;&#7907;c &dstrok;&#432;a v&agrave;o d&#432;&#7899;i d&#7841;ng temporal positional embedding, gi&uacute;p m&ocirc; h&igrave;nh ph&acirc;n bi&#7879;t c&aacute;c giai &dstrok;o&#7841;n sinh tr&#432;&#7903;ng trong n&#259;m.</span></figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-spatial-encoder.jpg" alt="TSViT spatial encoder">
-            <figcaption class="figure-caption">Spatial Encoder: h&#7885;c quan h&#7879; kh&ocirc;ng gian gi&#7919;a c&aacute;c patch sau khi &dstrok;&#7863;c tr&#432;ng th&#7901;i gian &dstrok;&atilde; &dstrok;&#432;&#7907;c tr&iacute;ch xu&#7845;t.</figcaption>
+            <figcaption class="figure-caption"><b>Spatial Encoder</b><span>Sau khi &dstrok;&#7863;c tr&#432;ng theo th&#7901;i gian &dstrok;&atilde; &dstrok;&#432;&#7907;c r&uacute;t tr&iacute;ch, Spatial Encoder h&#7885;c quan h&#7879; gi&#7919;a c&aacute;c patch trong kh&ocirc;ng gian. B&#432;&#7899;c n&agrave;y gi&uacute;p m&ocirc; h&igrave;nh t&#7853;n d&#7909;ng c&#7845;u tr&uacute;c th&#7917;a ru&#7897;ng v&agrave; ng&#7919; c&#7843;nh l&acirc;n c&#7853;n.</span></figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-segmentation-head.png" alt="TSViT segmentation head">
-            <figcaption class="figure-caption">Segmentation Head: &aacute;nh x&#7841; token v&#7873; pixel-level logits, reshape v&agrave; reassemble th&agrave;nh segmentation map cu&#7889;i c&ugrave;ng.</figcaption>
+            <figcaption class="figure-caption"><b>Segmentation Head</b><span>Segmentation Head &aacute;nh x&#7841; token &dstrok;&#7847;u ra th&agrave;nh logits &#7903; m&#7913;c pixel. C&aacute;c patch sau &dstrok;&oacute; &dstrok;&#432;&#7907;c reshape v&agrave; gh&eacute;p l&#7841;i &dstrok;&#7875; t&#7841;o b&#7843;n &dstrok;&#7891; nh&atilde;n c&acirc;y tr&#7891;ng cu&#7889;i c&ugrave;ng.</span></figcaption>
           </figure>
         </div>
         <div class="note" style="margin: 18px 0 12px;">
@@ -502,15 +514,15 @@
         <div class="grid three">
           <figure class="card figure">
             <img src="assets/architecture-unet3d.svg" alt="UNet3D architecture">
-            <figcaption class="figure-caption">UNet3D: baseline convolution 3D, d&ugrave;ng &dstrok;&#7875; so s&aacute;nh v&#7899;i TSViT &#7903; CQ1.</figcaption>
+            <figcaption class="figure-caption"><b>UNet3D baseline</b><span>UNet3D d&ugrave;ng t&iacute;ch ch&#7853;p 3D &dstrok;&#7875; h&#7885;c &dstrok;&#7891;ng th&#7901;i chi&#7873;u th&#7901;i gian v&agrave; kh&ocirc;ng gian. M&ocirc; h&igrave;nh m&#7841;nh &#7903; &dstrok;&#7863;c tr&#432;ng c&#7909;c b&#7897;, nh&#432;ng k&eacute;m linh ho&#7841;t h&#417;n attention khi c&#7847;n m&ocirc; h&igrave;nh h&oacute;a quan h&#7879; d&agrave;i h&#7841;n.</span></figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-tvit.svg" alt="TViT temporal-only architecture">
-            <figcaption class="figure-caption">TViT: b&#7887; spatial encoder, d&ugrave;ng &dstrok;&#7875; &dstrok;o m&#7913;c gi&#7843;m khi kh&ocirc;ng h&#7885;c quan h&#7879; kh&ocirc;ng gian.</figcaption>
+            <figcaption class="figure-caption"><b>TViT ablation</b><span>TViT gi&#7919; ph&#7847;n temporal modeling nh&#432;ng lo&#7841;i b&#7887; Spatial Encoder. Bi&#7871;n th&#7875; n&agrave;y ki&#7875;m tra li&#7879;u th&ocirc;ng tin th&#7901;i gian &dstrok;&#417;n thu&#7847;n c&oacute; &dstrok;&#7911; cho segmentation hay kh&ocirc;ng.</span></figcaption>
           </figure>
           <figure class="card figure">
             <img src="assets/architecture-stvit.svg" alt="STViT spatial-first architecture">
-            <figcaption class="figure-caption">STViT: &dstrok;&#7843;o th&#7913; t&#7921; th&agrave;nh spatial-first, d&ugrave;ng &dstrok;&#7875; ki&#7875;m tra thi&#7871;t k&#7871; temporal-first c&#7911;a TSViT.</figcaption>
+            <figcaption class="figure-caption"><b>STViT ablation</b><span>STViT &dstrok;&#7843;o th&#7913; t&#7921; x&#7917; l&yacute; th&agrave;nh spatial-first r&#7891;i temporal. K&#7871;t qu&#7843; so s&aacute;nh v&#7899;i TSViT cho bi&#7871;t th&#7913; t&#7921; temporal-then-spatial c&oacute; ph&ugrave; h&#7907;p h&#417;n kh&ocirc;ng.</span></figcaption>
           </figure>
         </div>
       </section>
