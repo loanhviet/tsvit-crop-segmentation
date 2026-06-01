@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-label="STViT architecture">
+  <defs>
+    <style>
+      .bg{fill:#fbfaf6}.txt{font-family:Arial, sans-serif;fill:#211a12}.h{font-size:22px;font-weight:700}.s{font-size:15px}.box{rx:12;stroke-width:2}.arrow{stroke:#3e2d1c;stroke-width:3;fill:none;marker-end:url(#m)}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3e2d1c"/></marker>
+  </defs>
+  <rect width="960" height="430" class="bg"/>
+  <text x="480" y="42" text-anchor="middle" class="txt h">STViT ablation: spatial first, temporal second</text>
+  <g transform="translate(55 135)">
+    <rect width="150" height="140" fill="#d9eef7" stroke="#2f77a3" class="box"/>
+    <text x="75" y="44" text-anchor="middle" class="txt h">Frames</text>
+    <text x="75" y="76" text-anchor="middle" class="txt s">t1, t2, ... tT</text>
+    <text x="75" y="106" text-anchor="middle" class="txt s">same region</text>
+  </g>
+  <g transform="translate(275 95)">
+    <rect width="220" height="220" fill="#dcebd6" stroke="#63984d" class="box"/>
+    <text x="110" y="46" text-anchor="middle" class="txt h">Spatial Encoder</text>
+    <text x="110" y="80" text-anchor="middle" class="txt s">learns patch relations</text>
+    <text x="110" y="108" text-anchor="middle" class="txt s">inside each timestamp</text>
+    <rect x="48" y="140" width="34" height="34" fill="#ef6f6c"/><rect x="88" y="140" width="34" height="34" fill="#6fbf73"/><rect x="128" y="140" width="34" height="34" fill="#4f86c6"/>
+    <rect x="48" y="180" width="34" height="34" fill="#f3c44f"/><rect x="88" y="180" width="34" height="34" fill="#9b7ede"/><rect x="128" y="180" width="34" height="34" fill="#59c3c3"/>
+  </g>
+  <g transform="translate(565 120)">
+    <rect width="190" height="170" fill="#fee2d5" stroke="#d46b35" class="box"/>
+    <text x="95" y="44" text-anchor="middle" class="txt h">Temporal</text>
+    <text x="95" y="72" text-anchor="middle" class="txt h">Encoder</text>
+    <text x="95" y="110" text-anchor="middle" class="txt s">then compares</text>
+    <text x="95" y="138" text-anchor="middle" class="txt s">spatial features over time</text>
+  </g>
+  <g transform="translate(815 135)">
+    <rect width="105" height="140" fill="#e9e1f3" stroke="#7a5fa6" class="box"/>
+    <text x="52.5" y="48" text-anchor="middle" class="txt h">Map</text>
+    <text x="52.5" y="76" text-anchor="middle" class="txt s">19 classes</text>
+  </g>
+  <path d="M205 205 H275" class="arrow"/>
+  <path d="M495 205 H565" class="arrow"/>
+  <path d="M755 205 H815" class="arrow"/>
+  <text x="480" y="365" text-anchor="middle" class="txt s">Ablation question: does reversing the TSViT order preserve the temporal signal?</text>
+</svg>

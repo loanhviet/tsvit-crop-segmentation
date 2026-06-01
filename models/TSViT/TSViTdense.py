@@ -122,7 +122,7 @@ class TSViT_single_token(nn.Module):
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b t c (h p1) (w p2) -> (b h w) t (p1 p2 c)', p1=self.patch_size, p2=self.patch_size),
             nn.Linear(patch_dim, self.dim))
-        self.to_temporal_embedding_input = nn.Linear(365, self.dim)
+        self.to_temporal_embedding_input = nn.Linear(366, self.dim)
         self.temporal_token = nn.Parameter(torch.randn(1, 1, self.dim))
         print('temporal token: ', self.temporal_token.shape)
         self.temporal_transformer = Transformer(self.dim, self.temporal_depth, self.heads, self.dim_head,
@@ -142,8 +142,8 @@ class TSViT_single_token(nn.Module):
         xt = x[:, :, -1, 0, 0]
         x = x[:, :, :-1]
         xt = (xt * 365.0001).to(torch.int64)
-        xt = F.one_hot(xt, num_classes=365).to(torch.float32)
-        xt = xt.reshape(-1, 365)
+        xt = F.one_hot(xt, num_classes=366).to(torch.float32)
+        xt = xt.reshape(-1, 366)
         temporal_pos_embedding = self.to_temporal_embedding_input(xt).reshape(B, T, self.dim)
         x = self.to_patch_embedding(x)
         x = x.reshape(B, -1, T, self.dim)
@@ -214,7 +214,7 @@ class TSViT_static_position_encodings(nn.Module):
         xt = x[:, :, -1, 0, 0]
         x = x[:, :, :-1]
         xt = (xt * 365.0001).to(torch.int64)
-        xt = F.one_hot(xt, num_classes=365).to(torch.float32)
+        xt = F.one_hot(xt, num_classes=366).to(torch.float32)
         x = self.to_patch_embedding(x)
         x = x.reshape(B, -1, T, self.dim)
         x += self.temporal_pos_embedding  #.unsqueeze(1)
@@ -260,7 +260,7 @@ class TSViT_global_attention_spatial_encoder(nn.Module):
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b t c (h p1) (w p2) -> (b h w) t (p1 p2 c)', p1=self.patch_size, p2=self.patch_size),
             nn.Linear(patch_dim, self.dim),)
-        self.to_temporal_embedding_input = nn.Linear(365, self.dim)
+        self.to_temporal_embedding_input = nn.Linear(366, self.dim)
         self.temporal_token = nn.Parameter(torch.randn(1, self.num_classes, self.dim))
         self.temporal_transformer = Transformer(self.dim, self.depth + 2, self.heads, self.dim_head,
                                                 self.dim * self.scale_dim, self.dropout)
@@ -278,8 +278,8 @@ class TSViT_global_attention_spatial_encoder(nn.Module):
         xt = x[:, :, -1, 0, 0]
         x = x[:, :, :-1]
         xt = (xt * 365.0001).to(torch.int64)
-        xt = F.one_hot(xt, num_classes=365).to(torch.float32)
-        xt = xt.reshape(-1, 365)
+        xt = F.one_hot(xt, num_classes=366).to(torch.float32)
+        xt = xt.reshape(-1, 366)
         temporal_pos_embedding = self.to_temporal_embedding_input(xt).reshape(B, T, self.dim)
         x = self.to_patch_embedding(x)
         x = x.reshape(B, -1, T, self.dim)
@@ -328,7 +328,7 @@ class TViT(nn.Module):
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b t c (h p1) (w p2) -> (b h w) t (p1 p2 c)', p1=self.patch_size, p2=self.patch_size),
             nn.Linear(patch_dim, self.dim),)
-        self.to_temporal_embedding_input = nn.Linear(365, self.dim)
+        self.to_temporal_embedding_input = nn.Linear(366, self.dim)
         self.temporal_token = nn.Parameter(torch.randn(1, self.num_classes, self.dim))
         self.temporal_transformer = Transformer(self.dim, self.temporal_depth, self.heads, self.dim_head,
                                                 self.dim * self.scale_dim, self.dropout)
@@ -343,8 +343,8 @@ class TViT(nn.Module):
         xt = x[:, :, -1, 0, 0]
         x = x[:, :, :-1]
         xt = (xt * 365.0001).to(torch.int64)
-        xt = F.one_hot(xt, num_classes=365).to(torch.float32)
-        xt = xt.reshape(-1, 365)
+        xt = F.one_hot(xt, num_classes=366).to(torch.float32)
+        xt = xt.reshape(-1, 366)
         temporal_pos_embedding = self.to_temporal_embedding_input(xt).reshape(B, T, self.dim)
         x = self.to_patch_embedding(x)
         x = x.reshape(B, -1, T, self.dim)

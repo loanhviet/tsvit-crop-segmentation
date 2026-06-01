@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-label="CQ1 qualitative comparison layout">
+  <defs>
+    <style>.bg{fill:#f7faf8}.txt{font-family:Arial,sans-serif;fill:#162017}.h{font-size:20px;font-weight:700}.s{font-size:14px}.frame{fill:#fff;stroke:#91a092;stroke-width:2;rx:10}.bad{stroke:#111;stroke-width:3}</style>
+  </defs>
+  <rect width="960" height="360" class="bg"/>
+  <text x="480" y="34" text-anchor="middle" class="txt h">Qualitative format: Ground Truth vs UNet3D vs TSViT</text>
+  <g transform="translate(70 80)">
+    <rect width="220" height="220" class="frame"/>
+    <text x="110" y="-16" text-anchor="middle" class="txt h">Ground Truth</text>
+    <rect x="18" y="18" width="82" height="70" fill="#6fbf73"/><rect x="100" y="18" width="102" height="70" fill="#f3c44f"/>
+    <rect x="18" y="88" width="55" height="114" fill="#4f86c6"/><rect x="73" y="88" width="129" height="58" fill="#ef6f6c"/><rect x="73" y="146" width="129" height="56" fill="#9b7ede"/>
+  </g>
+  <g transform="translate(370 80)">
+    <rect width="220" height="220" class="frame"/>
+    <text x="110" y="-16" text-anchor="middle" class="txt h">UNet3D</text>
+    <rect x="18" y="18" width="82" height="70" fill="#6fbf73"/><rect x="100" y="18" width="102" height="70" fill="#f3c44f"/>
+    <rect x="18" y="88" width="75" height="114" fill="#4f86c6"/><rect x="93" y="88" width="109" height="58" fill="#ef6f6c"/><rect x="73" y="146" width="129" height="56" fill="#9b7ede"/>
+    <path d="M90 91 L108 109 M108 91 L90 109 M64 162 L82 180 M82 162 L64 180" class="bad"/>
+  </g>
+  <g transform="translate(670 80)">
+    <rect width="220" height="220" class="frame"/>
+    <text x="110" y="-16" text-anchor="middle" class="txt h">TSViT</text>
+    <rect x="18" y="18" width="82" height="70" fill="#6fbf73"/><rect x="100" y="18" width="102" height="70" fill="#f3c44f"/>
+    <rect x="18" y="88" width="58" height="114" fill="#4f86c6"/><rect x="76" y="88" width="126" height="58" fill="#ef6f6c"/><rect x="73" y="146" width="129" height="56" fill="#9b7ede"/>
+    <path d="M74 144 L92 162 M92 144 L74 162" class="bad"/>
+  </g>
+  <text x="480" y="334" text-anchor="middle" class="txt s">Black marks indicate false pixels. Replace this layout asset with the group's exported Colab PNG when available.</text>
+</svg>

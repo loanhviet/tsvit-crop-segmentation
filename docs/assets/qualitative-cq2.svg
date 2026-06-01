@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 360" role="img" aria-label="CQ2 qualitative ablation comparison layout">
+  <defs>
+    <style>.bg{fill:#fbfaf6}.txt{font-family:Arial,sans-serif;fill:#211a12}.h{font-size:19px;font-weight:700}.s{font-size:14px}.frame{fill:#fff;stroke:#a19585;stroke-width:2;rx:10}.bad{stroke:#111;stroke-width:3}</style>
+  </defs>
+  <rect width="1040" height="360" class="bg"/>
+  <text x="520" y="34" text-anchor="middle" class="txt h">Qualitative format: ablation comparison on the same patch</text>
+  <g transform="translate(40 82)">
+    <rect width="210" height="210" class="frame"/><text x="105" y="-16" text-anchor="middle" class="txt h">Ground Truth</text>
+    <rect x="18" y="18" width="75" height="60" fill="#6fbf73"/><rect x="93" y="18" width="99" height="60" fill="#f3c44f"/><rect x="18" y="78" width="60" height="114" fill="#4f86c6"/><rect x="78" y="78" width="114" height="55" fill="#ef6f6c"/><rect x="78" y="133" width="114" height="59" fill="#9b7ede"/>
+  </g>
+  <g transform="translate(290 82)">
+    <rect width="210" height="210" class="frame"/><text x="105" y="-16" text-anchor="middle" class="txt h">TViT</text>
+    <rect x="18" y="18" width="104" height="84" fill="#6fbf73"/><rect x="122" y="18" width="70" height="84" fill="#f3c44f"/><rect x="18" y="102" width="96" height="90" fill="#4f86c6"/><rect x="114" y="102" width="78" height="90" fill="#ef6f6c"/>
+    <path d="M65 76 L83 94 M83 76 L65 94 M116 130 L134 148 M134 130 L116 148 M138 70 L156 88 M156 70 L138 88" class="bad"/>
+  </g>
+  <g transform="translate(540 82)">
+    <rect width="210" height="210" class="frame"/><text x="105" y="-16" text-anchor="middle" class="txt h">STViT</text>
+    <rect x="18" y="18" width="75" height="60" fill="#6fbf73"/><rect x="93" y="18" width="99" height="60" fill="#f3c44f"/><rect x="18" y="78" width="72" height="114" fill="#4f86c6"/><rect x="90" y="78" width="102" height="55" fill="#ef6f6c"/><rect x="78" y="133" width="114" height="59" fill="#9b7ede"/>
+    <path d="M87 78 L105 96 M105 78 L87 96 M76 132 L94 150 M94 132 L76 150" class="bad"/>
+  </g>
+  <g transform="translate(790 82)">
+    <rect width="210" height="210" class="frame"/><text x="105" y="-16" text-anchor="middle" class="txt h">TSViT full</text>
+    <rect x="18" y="18" width="75" height="60" fill="#6fbf73"/><rect x="93" y="18" width="99" height="60" fill="#f3c44f"/><rect x="18" y="78" width="62" height="114" fill="#4f86c6"/><rect x="80" y="78" width="112" height="55" fill="#ef6f6c"/><rect x="78" y="133" width="114" height="59" fill="#9b7ede"/>
+    <path d="M79 132 L97 150 M97 132 L79 150" class="bad"/>
+  </g>
+  <text x="520" y="334" text-anchor="middle" class="txt s">The layout emphasizes that TViT loses spatial consistency, while STViT is closer but still below the full TSViT.</text>
+</svg>

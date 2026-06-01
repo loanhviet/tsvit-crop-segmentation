@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-label="UNet3D architecture">
+  <defs>
+    <style>
+      .bg{fill:#f8fbff}.txt{font-family:Arial, sans-serif;fill:#162033}.h{font-size:22px;font-weight:700}.s{font-size:15px}.block{rx:10;stroke:#315f8c;stroke-width:2}.arrow{stroke:#20364f;stroke-width:3;fill:none;marker-end:url(#m)}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#20364f"/></marker>
+  </defs>
+  <rect width="960" height="430" class="bg"/>
+  <text x="480" y="42" text-anchor="middle" class="txt h">UNet3D baseline: local spatio-temporal convolution</text>
+  <g transform="translate(55 155)">
+    <rect width="140" height="110" fill="#d9eef7" class="block"/>
+    <text x="70" y="46" text-anchor="middle" class="txt h">Input</text>
+    <text x="70" y="74" text-anchor="middle" class="txt s">T x C x H x W</text>
+  </g>
+  <g transform="translate(255 110)">
+    <rect width="135" height="90" fill="#dcebd6" class="block"/>
+    <text x="67.5" y="38" text-anchor="middle" class="txt h">Encoder</text>
+    <text x="67.5" y="64" text-anchor="middle" class="txt s">3D conv</text>
+    <rect x="20" y="145" width="135" height="90" fill="#bfd9c2" class="block"/>
+    <text x="87.5" y="183" text-anchor="middle" class="txt h">Down</text>
+    <text x="87.5" y="209" text-anchor="middle" class="txt s">local features</text>
+  </g>
+  <g transform="translate(470 170)">
+    <rect width="145" height="90" fill="#fff4cf" stroke="#c99a17" stroke-width="2" rx="10"/>
+    <text x="72.5" y="38" text-anchor="middle" class="txt h">Bottleneck</text>
+    <text x="72.5" y="64" text-anchor="middle" class="txt s">compact volume</text>
+  </g>
+  <g transform="translate(695 110)">
+    <rect width="135" height="90" fill="#fee2d5" stroke="#d46b35" stroke-width="2" rx="10"/>
+    <text x="67.5" y="38" text-anchor="middle" class="txt h">Decoder</text>
+    <text x="67.5" y="64" text-anchor="middle" class="txt s">upsample</text>
+    <rect x="-20" y="145" width="135" height="90" fill="#f9cdbd" stroke="#d46b35" stroke-width="2" rx="10"/>
+    <text x="47.5" y="183" text-anchor="middle" class="txt h">Skip</text>
+    <text x="47.5" y="209" text-anchor="middle" class="txt s">fine details</text>
+  </g>
+  <g transform="translate(835 155)">
+    <rect width="90" height="110" fill="#e9e1f3" stroke="#7a5fa6" stroke-width="2" rx="10"/>
+    <text x="45" y="48" text-anchor="middle" class="txt h">Map</text>
+    <text x="45" y="76" text-anchor="middle" class="txt s">19 cls</text>
+  </g>
+  <path d="M195 210 H255" class="arrow"/>
+  <path d="M390 155 C430 155 430 215 470 215" class="arrow"/>
+  <path d="M615 215 C650 215 650 155 695 155" class="arrow"/>
+  <path d="M810 210 H835" class="arrow"/>
+  <path d="M390 300 C520 350 650 350 695 300" stroke="#6b7c8f" stroke-width="2" stroke-dasharray="8 6" fill="none"/>
+  <text x="480" y="380" text-anchor="middle" class="txt s">Baseline role: strong local CNN, but weaker at long-range temporal/spatial dependency than TSViT.</text>
+</svg>

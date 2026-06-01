@@ -1,0 +1,50 @@
+# Python/cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Local environments
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Model/data artifacts
+*.pth
+*.pt
+*.ckpt
+*.pickle
+*.pkl
+PASTIS24/
+PASTIS24_extracted/
+!configs/PASTIS24/
+!configs/PASTIS24/*.yaml
+CQ3_RAW/
+CQ3_EXTERNAL/
+CQ3_EXTERNAL_MINI/
+data/external_raw/
+models/saved_models/
+checkpoints/
+runs/
+logs/
+
+# Notebook/output noise
+*.log
+events.out.tfevents*
+tensorboard/
+
+# Old local presentation scratch files
+paper/
+img/
+docs/*.md
+docs/*.docx
+docs/figures/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

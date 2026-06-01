@@ -1,43 +1,104 @@
-# Repository for Land Cover Recognition Model Training Using Satellite Imagery
+# TSViT Crop-Type Semantic Segmentation
 
-Welcome to the dedicated repository for advancing land cover recognition through the application of state-of-the-art models on satellite imagery. This repository serves as a comprehensive resource for researchers and practitioners in the field, providing access to research code, detailed setup instructions, and guidelines for conducting experiments with satellite image timeseries data.
+This repository contains the group's reproduction and analysis of **TSViT for crop-type semantic segmentation from satellite image time series**. The project focuses on the PASTIS24 benchmark and evaluates the model with both quantitative metrics and qualitative segmentation maps.
 
-## Featured Research Publications
+## Links
 
-This repository highlights contributions to the field through the following research publications:
+- Code repository: `https://github.com/loanhviet/tsvit-crop-segmentation`
+- Demo GitHub.io: `https://loanhviet.github.io/tsvit-crop-segmentation/`
+- Demo source: [docs/index.html](docs/index.html)
+- Clean Colab notebook: [TSViT.ipynb](TSViT.ipynb)
 
-- [ViTs for SITS: Vision Transformers for Satellite Image Time Series](https://openaccess.thecvf.com/content/CVPR2023/html/Tarasiou_ViTs_for_SITS_Vision_Transformers_for_Satellite_Image_Time_Series_CVPR_2023_paper.html) - Featured at CVPR 2023, this paper explores the application of Vision Transformers to Satellite Image Time Series analysis. For further details, please consult the [README_TSVIT.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_TSVIT.md) document.
-- [Context-self contrastive pretraining for crop type semantic segmentation](https://ieeexplore.ieee.org/abstract/document/9854891) - 
-Published in IEEE Transactions on Geoscience and Remote Sensing, this work introduces a novel supervised pretraining method for semantic segmentation 
-of crop types exhibiti performance gains along object boundaries. Additional information is available in the [README_CSCL.md](https://github.com/michaeltrs/DeepSatModels/blob/main/README_CSCL.md) document.
+## Main Questions
 
-## Environment Setup
+| Question | Experiment | Outcome |
+|---|---|---|
+| CQ1 | TSViT vs UNet3D | TSViT improves mIoU and macro F1 while using fewer parameters. |
+| CQ2 | TSViT vs TViT vs STViT | Removing spatial modeling hurts most; temporal-then-spatial performs best. |
 
-### Installation of Miniconda
-For the initial setup, please follow the instructions for downloading and installing Miniconda available at the [official Conda documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html).
+The final demo reports benchmark test-set results only. Practical behavior is shown through qualitative prediction maps on the PASTIS24 test split.
 
-### Environment Configuration
-1. **Creating the Environment**: Navigate to the code directory in your terminal and create the environment using the provided `.yml` file by executing:
+## Dataset
 
-        conda env create -f deepsatmodels_env.yml
+The main dataset is **PASTIS24**, a 24x24 patch version of PASTIS for semantic segmentation.
 
-2. **Activating the Environment**: Activate the newly created environment with:
+Expected sample structure:
 
-        source activate deepsatmodels
+```python
+sample = {
+    "img":    (T, 10, 24, 24),  # Sentinel-2 time series
+    "labels": (3, 24, 24),      # segmentation masks; training uses labels[0]
+    "doy":    (T,),             # day-of-year values
+}
+```
 
-3. **PyTorch Installation**: Install the required version of PyTorch along with torchvision and torchaudio by running:
+Class `19` is treated as void/unknown and masked during training and evaluation.
 
-        conda install pytorch torchvision torchaudio cudatoolkit=10.1 -c pytorch-nightly
+## Results
 
+### CQ1: TSViT vs UNet3D
 
-## Experiment Setup
+| Model | Loss | OA | mIoU | F1-macro | Precision | Recall | Params |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| TSViT | 0.6022 | 0.8271 | 0.6361 | 0.7623 | 0.7841 | 0.7465 | 1.657M |
+| UNet3D | 0.6281 | 0.8011 | 0.5720 | 0.7045 | 0.7573 | 0.6711 | 6.177M |
 
-- **Configuration**: Specify the base directory and paths for training and evaluation datasets within the `data/datasets.yaml` file.
-- **Experiment Configuration**: Use a distinct `.yaml` file for each experiment, located in the `configs` folder. These configuration files encapsulate default parameters aligned with those used in the featured research. Modify these `.yaml` files as necessary to accommodate custom datasets.
-- **Guidance on Experiments**: For detailed instructions on setting up and conducting experiments, refer to the specific README.MD files associated with each paper or dataset.
+### CQ2: Ablation
 
-## License and Copyright
+| Model | Loss | OA | mIoU | F1-macro | Precision | Recall |
+|---|---:|---:|---:|---:|---:|---:|
+| TSViT full | 0.6022 | 0.8271 | 0.6361 | 0.7623 | 0.7841 | 0.7465 |
+| TViT, no spatial | 1.0591 | 0.6685 | 0.3713 | 0.5267 | 0.5654 | 0.5049 |
+| STViT, spatial-first | 0.7707 | 0.7939 | 0.5572 | 0.6921 | 0.7424 | 0.6660 |
 
-This project is made available under the Apache License 2.0. Please see the [LICENSE](https://github.com/michaeltrs/DeepSatModels/blob/main/LICENSE.txt) file for detailed licensing information.
+Delta mIoU vs TSViT full:
 
-Copyright © 2023 by Michail Tarasiou
+| Variant | Delta mIoU | Interpretation |
+|---|---:|---|
+| TViT | -0.2648 | Spatial modeling is critical for pixel-level segmentation. |
+| STViT | -0.0789 | Spatial-first is better than temporal-only, but weaker than TSViT. |
+
+## Reproduction
+
+Set dataset paths in `data/datasets.yaml`, then run the training scripts.
+
+```bash
+# TSViT, original repo config
+python train_and_eval/segmentation_training_transf.py \
+  --config configs/PASTIS24/TSViT_fold1.yaml \
+  --device 0
+
+# Colab/A100 configs used for the submitted experiments
+python train_and_eval/segmentation_training_transf.py --config configs/PASTIS24/TSViT_fold1_colab_full_a100_opt.yaml --device 0
+python train_and_eval/segmentation_training.py --config configs/PASTIS24/UNet3D_fold1_colab_full_a100_opt.yaml --device 0
+python train_and_eval/segmentation_training_transf.py --config configs/PASTIS24/TViT_fold1_colab_full_a100_opt.yaml --device 0
+python train_and_eval/segmentation_training_transf.py --config configs/PASTIS24/STViT_fold1_colab_full_a100_opt.yaml --device 0
+```
+
+For Colab runs, use [TSViT.ipynb](TSViT.ipynb). The notebook is cleaned for submission: execution outputs are removed, long-running train/eval cells are guarded by flags, and dataset/checkpoint artifacts are kept outside GitHub.
+
+## Demo
+
+The GitHub Pages demo is a static report:
+
+```text
+docs/
+  index.html
+  assets/
+```
+
+Publish with GitHub Pages:
+
+1. Push this repository to `https://github.com/loanhviet/tsvit-crop-segmentation`.
+2. Open `Settings -> Pages`.
+3. Select `Deploy from a branch`.
+4. Choose branch `main` and folder `/docs`.
+
+## Citation
+
+This project is based on the original DeepSatModels implementation:
+
+- Tarasiou, M., Chavez, E., Zafeiriou, S. "ViTs for SITS: Vision Transformers for Satellite Image Time Series", CVPR 2023.
+- Original repository: https://github.com/michaeltrs/DeepSatModels
+
+The original project is licensed under Apache License 2.0. See [LICENSE.txt](LICENSE.txt).

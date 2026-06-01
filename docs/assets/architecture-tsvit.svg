@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-label="TSViT architecture">
+  <defs>
+    <style>
+      .bg{fill:#f7faf8}.box{rx:12;stroke-width:2}.txt{font-family:Arial, sans-serif;fill:#13201a}.h{font-size:22px;font-weight:700}.s{font-size:15px}.arrow{stroke:#1f3b2d;stroke-width:3;fill:none;marker-end:url(#m)}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3b2d"/></marker>
+  </defs>
+  <rect width="960" height="430" class="bg"/>
+  <text x="480" y="42" text-anchor="middle" class="txt h">TSViT full: temporal first, then spatial</text>
+  <g transform="translate(40 105)">
+    <rect width="180" height="170" fill="#d9eef7" stroke="#2f77a3" class="box"/>
+    <text x="90" y="42" text-anchor="middle" class="txt h">SITS input</text>
+    <text x="90" y="72" text-anchor="middle" class="txt s">T x 10 bands</text>
+    <text x="90" y="100" text-anchor="middle" class="txt s">24 x 24 patch</text>
+    <text x="90" y="132" text-anchor="middle" class="txt s">+ day-of-year</text>
+  </g>
+  <g transform="translate(285 105)">
+    <rect width="180" height="170" fill="#fff4cf" stroke="#c99a17" class="box"/>
+    <text x="90" y="38" text-anchor="middle" class="txt h">Token</text>
+    <text x="90" y="68" text-anchor="middle" class="txt h">embedding</text>
+    <text x="90" y="104" text-anchor="middle" class="txt s">2 x 2 image patches</text>
+    <text x="90" y="132" text-anchor="middle" class="txt s">spectral + date tokens</text>
+  </g>
+  <g transform="translate(530 80)">
+    <rect width="180" height="100" fill="#fee2d5" stroke="#d46b35" class="box"/>
+    <text x="90" y="42" text-anchor="middle" class="txt h">Temporal</text>
+    <text x="90" y="70" text-anchor="middle" class="txt s">learn crop evolution</text>
+  </g>
+  <g transform="translate(530 220)">
+    <rect width="180" height="100" fill="#dcebd6" stroke="#63984d" class="box"/>
+    <text x="90" y="42" text-anchor="middle" class="txt h">Spatial</text>
+    <text x="90" y="70" text-anchor="middle" class="txt s">learn patch relations</text>
+  </g>
+  <g transform="translate(775 105)">
+    <rect width="145" height="170" fill="#e9e1f3" stroke="#7a5fa6" class="box"/>
+    <text x="72.5" y="42" text-anchor="middle" class="txt h">Head</text>
+    <text x="72.5" y="74" text-anchor="middle" class="txt s">19 class logits</text>
+    <text x="72.5" y="105" text-anchor="middle" class="txt s">per pixel</text>
+    <rect x="39" y="122" width="18" height="18" fill="#ef6f6c"/><rect x="59" y="122" width="18" height="18" fill="#6fbf73"/><rect x="79" y="122" width="18" height="18" fill="#4f86c6"/>
+    <rect x="39" y="142" width="18" height="18" fill="#f3c44f"/><rect x="59" y="142" width="18" height="18" fill="#9b7ede"/><rect x="79" y="142" width="18" height="18" fill="#59c3c3"/>
+  </g>
+  <path d="M220 190 H285" class="arrow"/>
+  <path d="M465 190 C500 190 500 130 530 130" class="arrow"/>
+  <path d="M620 180 V220" class="arrow"/>
+  <path d="M710 270 C745 270 745 190 775 190" class="arrow"/>
+  <text x="480" y="380" text-anchor="middle" class="txt s">Main hypothesis: model crop phenology first, then spatial consistency between parcels.</text>
+</svg>
